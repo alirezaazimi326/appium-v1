@@ -16,6 +16,8 @@ from modules.steps.step6_postal_code import Step6PostalCodeModule
 from modules.steps.step7_payment import Step7PaymentModule
 from modules.steps.step8_summary import Step8SummaryModule
 from modules.steps.final_verification import FinalVerificationModule
+from modules.steps.logout import LogoutModule
+from modules.steps.sms_check import SmsCheckModule
 from modules.api.driver_api import DriverAPI
 
 def process_driver(driver, driver_details):
@@ -90,6 +92,10 @@ def process_driver(driver, driver_details):
                                                 if step8.verify_and_submit():
                                                     print("Step 8 completed successfully!")
                                                     print("/n ****************")
+                                                    
+                                                    # Check for SMS verification
+                                                    sms_check = SmsCheckModule(driver)
+                                                    sms_check.check_sms_prompt()  # This will exit if SMS prompt is found
 
                                                     # Final Verification
                                                     final_verify = FinalVerificationModule(driver)
@@ -101,7 +107,15 @@ def process_driver(driver, driver_details):
                                                         # Return to home page
                                                         if final_verify.back_to_home():
                                                             print("Successfully returned to home page")
-                                                            return True
+                                                            
+                                                            # Perform logout
+                                                            logout = LogoutModule(driver)
+                                                            if logout.perform_logout():
+                                                                print("Successfully logged out")
+                                                                return True
+                                                            else:
+                                                                print("Failed to logout")
+                                                                return False
                                                         else:
                                                             print("Failed to return to home page")
                                                     else:

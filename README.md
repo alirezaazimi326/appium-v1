@@ -30,20 +30,26 @@ pip install -r requirements.txt
 
 ```
 appium_automation/
+├── config/
+│   └── api_config.py
 ├── modules/
+│   ├── api/
+│   │   └── driver_api.py
+│   ├── steps/
+│   │   ├── step0_verification.py
+│   │   ├── step1_sender_receiver.py
+│   │   ├── step2_car_driver.py
+│   │   ├── step3_cargo.py
+│   │   ├── step4_loading.py
+│   │   ├── step5_unloading.py
+│   │   ├── step6_postal_code.py
+│   │   ├── step7_payment.py
+│   │   ├── step8_summary.py
+│   │   └── final_verification.py
+│   ├── before_login.py
 │   ├── login.py
 │   ├── menu.py
-│   └── steps/
-│       ├── step0_verification.py
-│       ├── step1_sender_receiver.py
-│       ├── step2_car_driver.py
-│       ├── step3_cargo.py
-│       ├── step4_loading.py
-│       ├── step5_unloading.py
-│       ├── step6_postal_code.py
-│       ├── step7_payment.py
-│       ├── step8_summary.py
-│       └── final_verification.py
+│   └── steps_handler.py
 ├── main.py
 ├── requirements.txt
 └── README.md
@@ -59,23 +65,27 @@ python main.py
 
 ## Automation Steps
 
-1. System Login
-2. Initial Verification
-3. Sender and Receiver Information
-4. Vehicle and Driver Details
-5. Cargo Information
-6. Loading Location
-7. Unloading Location
-8. Postal Code Verification
-9. Payment and Document Issuance
-10. Summary and Final Submission
-11. Final Verification and Return to Home
+1. Login Preparations
+2. System Login
+3. Initial Verification
+4. Sender and Receiver Information
+5. Vehicle and Driver Details
+6. Cargo Information
+7. Loading Location
+8. Unloading Location
+9. Postal Code Verification
+10. Payment and Document Issuance
+11. Summary and Final Submission
+12. Final Verification and Return to Home
 
 ## Features
 
 - Complete end-to-end automation of transport document creation
+- API integration for driver information retrieval
+- Modular architecture with centralized step handling
 - Robust error handling and verification at each step
 - Multiple selector strategies (XPath, UiAutomator) for reliable element location
 - Automatic captcha reading and input
 - Confirmation popup handling
-- Final verification and success validation 
+- Final verification and success validation
+- Configuration management for API endpoints 

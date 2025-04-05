@@ -7,12 +7,25 @@ import os
 
 # Add the parent directory to the Python path to import config
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from config.settings import SENDER_DETAILS, RECEIVER_DETAILS
 
 class Step1SenderReceiverModule:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 20)
+        self.driver_details = None
+
+    def set_driver_details(self, driver_details):
+        """Set driver details received from login module"""
+        self.driver_details = {
+            'sender': {
+                'full_name': driver_details['sender_full_name'],
+                'phone_number': driver_details['sender_phone_number']
+            },
+            'receiver': {
+                'full_name': driver_details['receiver_full_name'],
+                'phone_number': driver_details['receiver_phone_number']
+            }
+        }
 
     def verify_step_title(self, expected_title="مشخصات فرستنده و گیرنده"):
         """Verify if we're on the sender/receiver step"""
@@ -31,12 +44,9 @@ class Step1SenderReceiverModule:
             print(f"Error verifying step 1 title: {str(e)}")
             return False
 
-    def fill_sender_details(self, sender_info=None):
+    def fill_sender_details(self, sender_info):
         """Fill in the sender details"""
         try:
-            if sender_info is None:
-                sender_info = SENDER_DETAILS
-
             # Fill sender full name - using index since it's the first input field
             name_field = self.wait.until(EC.presence_of_element_located(
                 (AppiumBy.XPATH, '//android.widget.EditText[@resource-id="RNE__Input__text-input" and @index="0"]')
@@ -63,12 +73,9 @@ class Step1SenderReceiverModule:
             print(f"Error filling sender details: {str(e)}")
             return False
 
-    def fill_receiver_details(self, receiver_info=None):
+    def fill_receiver_details(self, receiver_info):
         """Fill in the receiver details"""
         try:
-            if receiver_info is None:
-                receiver_info = RECEIVER_DETAILS
-
             # Fill receiver full name using exact bounds
             name_field = self.wait.until(EC.presence_of_element_located(
                 (AppiumBy.XPATH, '(//android.widget.EditText[@resource-id="RNE__Input__text-input"])[6]')
@@ -114,18 +121,24 @@ class Step1SenderReceiverModule:
                 print(f"Error clicking continue button: {str(e)}")
                 raise
 
-    def fill_and_continue(self, sender_info=None, receiver_info=None):
+    def fill_and_continue(self):
         """Fill all details and continue to next step"""
         try:
-            if self.verify_step_title():
-                if not self.fill_sender_details(sender_info):
-                    return False
-                if not self.fill_receiver_details(receiver_info):
-                    return False
-                time.sleep(1)  # Wait for any animations
-                self.click_continue_button()
-                return True
-            return False
+            if not self.verify_step_title():
+                return False
+
+            if not self.driver_details:
+                print("No driver details available. Please set driver details first.")
+                return False
+
+            if not self.fill_sender_details(self.driver_details['sender']):
+                return False
+            if not self.fill_receiver_details(self.driver_details['receiver']):
+                return False
+                
+            time.sleep(1)  # Wait for any animations
+            self.click_continue_button()
+            return True
         except Exception as e:
             print(f"Step 1 fill and continue failed with error: {str(e)}")
             return False 

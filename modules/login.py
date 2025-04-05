@@ -6,18 +6,32 @@ import os
 
 # Add the parent directory to the Python path to import config
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config.settings import LOGIN_CREDENTIALS
+
+from modules.api.driver_api import DriverAPI
 
 class LoginModule:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 20)
+        self.api = DriverAPI()
+        self.driver_details = None
 
-    def enter_phone_number(self, phone_number=None):
+    def get_credentials(self, phone_number):
+        """Get user credentials and details from API"""
+        try:
+            self.driver_details = self.api.get_driver_by_phone(phone_number)
+            if self.driver_details:
+                return {
+                    'phone_number': self.driver_details['user_name'],
+                    'password': self.driver_details['password']
+                }
+            return None
+        except Exception as e:
+            print(f"Error getting credentials from API: {str(e)}")
+            return None
+
+    def enter_phone_number(self, phone_number):
         """Enter phone number in the phone field"""
-        if phone_number is None:
-            phone_number = LOGIN_CREDENTIALS['phone_number']
-        
         try:
             # Remove '09' prefix if exists
             if phone_number.startswith('09'):
@@ -33,11 +47,8 @@ class LoginModule:
             print(f"Error entering phone number: {str(e)}")
             return False
 
-    def enter_password(self, password=None):
+    def enter_password(self, password):
         """Enter password in the password field"""
-        if password is None:
-            password = LOGIN_CREDENTIALS['password']
-        
         try:
             password_field = self.wait.until(EC.presence_of_element_located(
                 (AppiumBy.XPATH, '(//android.widget.EditText[@resource-id="RNE__Input__text-input"])[2]')
@@ -74,16 +85,22 @@ class LoginModule:
                 print(f"Error clicking login button: {str(e)}")
                 return False
 
-    def perform_login(self, phone_number=None, password=None):
-        """Perform complete login process"""
+    def perform_login(self, phone_number):
+        """Perform complete login process using API credentials"""
         try:
-            if not self.enter_phone_number(phone_number):
-                return False
-            if not self.enter_password(password):
-                return False
+            credentials = self.get_credentials(phone_number)
+            if not credentials:
+                print("Could not find user credentials in API")
+                return None
+
+            if not self.enter_phone_number(credentials['phone_number']):
+                return None
+            if not self.enter_password(credentials['password']):
+                return None
             if not self.click_login_button():
-                return False
-            return True
+                return None
+                
+            return self.driver_details
         except Exception as e:
             print(f"Login failed with error: {str(e)}")
-            return False 
+            return None 

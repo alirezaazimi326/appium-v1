@@ -7,12 +7,24 @@ import os
 
 # Add the parent directory to the Python path to import config
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from config.settings import CARGO_DETAILS
 
 class Step3CargoModule:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 20)
+        self.driver_details = None
+
+    def set_driver_details(self, driver_details):
+        """Set driver details received from login module"""
+        self.driver_details = {
+            'cargo': {
+                'name': driver_details['product_name'],
+                'packing_type': driver_details['packaging_type'],
+                'weight': driver_details['weight'],
+                'value': driver_details['cargo_value'],
+                'packages_count': '1'  # Default value since it's not in API
+            }
+        }
 
     def verify_step_title(self, expected_title="مشخصات کالا"):
         """Verify if we're on the cargo details step"""
@@ -31,11 +43,14 @@ class Step3CargoModule:
             print(f"Error verifying step 3 title: {str(e)}")
             return False
 
-    def fill_cargo_name(self, cargo_info=None):
+    def fill_cargo_name(self):
         """Fill in the cargo name and select from dropdown"""
         try:
-            if cargo_info is None:
-                cargo_info = CARGO_DETAILS
+            if not self.driver_details:
+                print("No driver details available")
+                return False
+
+            cargo_info = self.driver_details['cargo']
 
             # Fill cargo name
             name_field = self.wait.until(EC.presence_of_element_located(
@@ -96,11 +111,14 @@ class Step3CargoModule:
             print(f"Error filling cargo details: {str(e)}")
             return False
 
-    def complete_cargo_details(self, cargo_info=None):
+    def complete_cargo_details(self):
         """Fill additional cargo details after adding cargo"""
         try:
-            if cargo_info is None:
-                cargo_info = CARGO_DETAILS
+            if not self.driver_details:
+                print("No driver details available")
+                return False
+
+            cargo_info = self.driver_details['cargo']
 
             # Fill cargo value
             value_field = self.wait.until(EC.presence_of_element_located(
@@ -129,14 +147,18 @@ class Step3CargoModule:
             print(f"Error completing cargo details: {str(e)}")
             return False
 
-    def fill_and_continue(self, cargo_info=None):
+    def fill_and_continue(self):
         """Complete cargo details and continue to next step"""
         try:
+            if not self.driver_details:
+                print("No driver details available. Please set driver details first.")
+                return False
+
             if self.verify_step_title():
-                if not self.fill_cargo_name(cargo_info):
+                if not self.fill_cargo_name():
                     return False
                 time.sleep(1)  # Wait for any animations
-                if not self.complete_cargo_details(cargo_info):
+                if not self.complete_cargo_details():
                     return False
                 return True
             return False

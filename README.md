@@ -1,32 +1,32 @@
-# اتوماسیون سامانه حمل و نقل
+# Transport System Automation
 
-این پروژه یک اتوماسیون برای سامانه حمل و نقل با استفاده از Appium و Python است.
+This project is an automation solution for a transport system using Appium and Python.
 
-## پیش‌نیازها
+## Prerequisites
 
 - Python 3.8+
 - Appium Server
 - Android SDK
-- Android Emulator یا دستگاه فیزیکی
+- Android Emulator or Physical Device
 - pip (Python Package Manager)
 
-## نصب و راه‌اندازی
+## Setup and Installation
 
-1. نصب وابستگی‌ها:
+1. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-2. تنظیم Appium Server:
-- نصب Appium Server
-- اطمینان از اجرای سرور در پورت 4723
+2. Appium Server Setup:
+- Install Appium Server
+- Ensure server is running on port 4723
 
-3. تنظیم Android:
-- نصب Android SDK
-- تنظیم ANDROID_HOME
-- راه‌اندازی شبیه‌ساز یا اتصال دستگاه فیزیکی
+3. Android Setup:
+- Install Android SDK
+- Set up ANDROID_HOME
+- Launch emulator or connect physical device
 
-## ساختار پروژه
+## Project Structure
 
 ```
 appium_automation/
@@ -49,24 +49,33 @@ appium_automation/
 └── README.md
 ```
 
-## اجرا
+## Running the Automation
 
-برای اجرای اتوماسیون:
+To run the automation:
 
 ```bash
 python main.py
 ```
 
-## مراحل اتوماسیون
+## Automation Steps
 
-1. ورود به سیستم
-2. تایید اولیه
-3. اطلاعات فرستنده و گیرنده
-4. اطلاعات ماشین و راننده
-5. اطلاعات محموله
-6. محل بارگیری
-7. محل تخلیه
-8. تایید کد پستی
-9. پرداخت و صدور سند
-10. خلاصه و ثبت نهایی
-11. تایید نهایی و بازگشت به صفحه اصلی 
+1. System Login
+2. Initial Verification
+3. Sender and Receiver Information
+4. Vehicle and Driver Details
+5. Cargo Information
+6. Loading Location
+7. Unloading Location
+8. Postal Code Verification
+9. Payment and Document Issuance
+10. Summary and Final Submission
+11. Final Verification and Return to Home
+
+## Features
+
+- Complete end-to-end automation of transport document creation
+- Robust error handling and verification at each step
+- Multiple selector strategies (XPath, UiAutomator) for reliable element location
+- Automatic captcha reading and input
+- Confirmation popup handling
+- Final verification and success validation 

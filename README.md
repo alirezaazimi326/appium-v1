@@ -45,7 +45,8 @@ appium_automation/
 │   │   ├── step6_postal_code.py
 │   │   ├── step7_payment.py
 │   │   ├── step8_summary.py
-│   │   └── final_verification.py
+│   │   ├── step9_final_verification.py
+|   |   └── logout.py
 │   ├── errors/
 │   │   └── road_bill_active_error.py
 │   ├── before_login.py

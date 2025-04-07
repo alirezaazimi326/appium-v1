@@ -1,6 +1,8 @@
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from modules.errors.road_bill_active_error import RoadBillActiveErrorHandler
+
 import time
 
 class Step8SummaryModule:
@@ -221,8 +223,16 @@ class Step8SummaryModule:
                 time.sleep(1)  # Wait for popup
                 if not self.confirm_popup():
                     return False
+
+                # ✅ Check and handle 'road bill already active' error
+                error_handler = RoadBillActiveErrorHandler(self.driver)
+                if error_handler.is_error_present():
+                    error_handler.handle_error()
+                    print("Handled road bill active error after confirmation.")
+                    return False  # Or return 'handled' status if needed
+
                 return True
             return False
         except Exception as e:
             print(f"Step 8 summary verification and submission failed: {str(e)}")
-            return False 
+            return False

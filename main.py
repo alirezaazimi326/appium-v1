@@ -9,7 +9,7 @@ from modules.api.driver_api import DriverAPI
 desired_caps = {
     'platformName': 'Android',
     'automationName': 'UiAutomator2',
-    'avd': 'Pixel_7_Edited_API_34_Num_2',  # <-- AVD name from your emulator config
+    'avd': 'Pixel_7_Edited_API_34_Num_1',  # <-- AVD name from your emulator config
     'app': os.path.join(os.getcwd(), 'com.transport.apk'),
     'noReset': True,
     'newCommandTimeout': 3600,

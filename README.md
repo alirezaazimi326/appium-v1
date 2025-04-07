@@ -46,13 +46,18 @@ appium_automation/
 │   │   ├── step7_payment.py
 │   │   ├── step8_summary.py
 │   │   └── final_verification.py
+│   ├── errors/
+│   │   └── road_bill_active_error.py
 │   ├── before_login.py
 │   ├── login.py
 │   ├── menu.py
 │   └── steps_handler.py
 ├── main.py
+├── parallel_runner.py
 ├── requirements.txt
 └── README.md
+
+
 ```
 
 ## Running the Automation

@@ -30,19 +30,37 @@ class Step1SenderReceiverModule:
     def verify_step_title(self, expected_title="مشخصات فرستنده و گیرنده"):
         """Verify if we're on the sender/receiver step"""
         try:
-            title_element = self.wait.until(EC.presence_of_element_located(
-                (AppiumBy.XPATH, f'//android.widget.TextView[@text="{expected_title}"]')
-            ))
-            actual_title = title_element.text
-            if actual_title == expected_title:
-                print(f"Verified step 1: {actual_title}")
-                return True
-            else:
-                print(f"Step 1 mismatch. Expected: {expected_title}, Found: {actual_title}")
-                return False
+        # Try with UiSelector first
+            try:
+                title_element = self.wait.until(EC.presence_of_element_located((
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'new UiSelector().text("{expected_title}")'
+                )))
+                if title_element.is_displayed():
+                    print(f"Verified step 1 using UiSelector: {expected_title}")
+                    return True
+            except Exception:
+                print("UiSelector check failed, trying XPath...")
+
+        # Fallback to XPath
+            try:
+                title_element = self.wait.until(EC.presence_of_element_located((
+                    AppiumBy.XPATH,
+                    f'//android.widget.TextView[@text="{expected_title}"]'
+                )))
+                if title_element.is_displayed():
+                    print(f"Verified step 1 using XPath: {expected_title}")
+                    return True
+            except Exception:
+                pass
+
+            print(f"Step 1 title not found: {expected_title}")
+            return False
+
         except Exception as e:
             print(f"Error verifying step 1 title: {str(e)}")
             return False
+
 
     def fill_sender_details(self, sender_info):
         """Fill in the sender details"""

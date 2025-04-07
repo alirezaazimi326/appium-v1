@@ -76,7 +76,7 @@ class LoginModule:
             try:
                 # Fallback to class and bounds if content-desc fails
                 login_button = self.wait.until(EC.presence_of_element_located(
-                    (AppiumBy.XPATH, '//android.view.ViewGroup[@bounds="[96,1463][984,1541]"]')
+                    (AppiumBy.XPATH, '//android.widget.TextView[@text="ورود"]')
                 ))
                 login_button.click()
                 print("Clicked login button using bounds")
@@ -84,6 +84,79 @@ class LoginModule:
             except Exception as e:
                 print(f"Error clicking login button: {str(e)}")
                 return False
+
+    def check_login_error(self):
+        """Check if login error message appears"""
+        try:
+            # Check for any of the possible error messages
+            error_selectors = [
+                (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("خطا")'),
+                (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("شماره تلفن یا کلمه عبور اشتباه می باشد.")'),
+                (AppiumBy.XPATH, '//android.widget.TextView[@text="شماره تلفن یا کلمه عبور اشتباه می باشد."]')
+            ]
+            
+            for selector in error_selectors:
+                try:
+                    error_element = self.wait.until(EC.presence_of_element_located(selector))
+                    if error_element:
+                        print("Wrong password or phone number")
+                        print("***************************")
+                        print(f"driver {self.driver_details['user_name']} password is wrong")
+                        print("***********************")
+                        return True
+                except:
+                    continue
+            return False
+        except Exception as e:
+            print(f"Error checking for login error: {str(e)}")
+            return False
+
+    def handle_error_popup(self):
+        """Click on 'متوجه شدم' if error popup appears and clear fields after"""
+        try:
+            # Try both selectors for the "متوجه شدم" button
+            ok_selectors = [
+                (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("متوجه شدم")'),
+                (AppiumBy.XPATH, '//android.widget.TextView[@text="متوجه شدم"]')
+            ]
+            
+            for selector in ok_selectors:
+                try:
+                    ok_button = self.wait.until(EC.presence_of_element_located(selector))
+                    ok_button.click()
+                    print("Clicked 'متوجه شدم' to dismiss error")
+                    
+                    # Clear the phone number and password fields
+                    self.clear_fields()
+                    print("Cleared phone number and password fields.")
+                    
+                    return True
+                except:
+                    continue
+            return False
+        except Exception as e:
+            print(f"Error handling error popup: {str(e)}")
+            return False
+
+    def clear_fields(self):
+        """Clear the phone number and password fields"""
+        try:
+            # Clear phone number field
+            phone_field = self.wait.until(EC.presence_of_element_located(
+                (AppiumBy.XPATH, '//android.widget.EditText[@resource-id="RNE__Input__text-input"]')
+            ))
+            phone_field.clear()
+            print("Cleared phone number field.")
+            
+            # Clear password field
+            password_field = self.wait.until(EC.presence_of_element_located(
+                (AppiumBy.XPATH, '(//android.widget.EditText[@resource-id="RNE__Input__text-input"])[2]') 
+            ))
+            password_field.clear()
+            print("Cleared password field.")
+            
+        except Exception as e:
+            print(f"Error clearing fields: {str(e)}")
 
     def perform_login(self, phone_number):
         """Perform complete login process using API credentials"""
@@ -99,8 +172,25 @@ class LoginModule:
                 return None
             if not self.click_login_button():
                 return None
-                
+
+            # ✅ Check if successful login UI element appears (باربرگ)
+            try:
+                success_element = self.wait.until(EC.presence_of_element_located((
+                    AppiumBy.XPATH, '//android.widget.TextView[@text="باربرگ"]'
+                )))
+                if success_element:
+                    print("Login successful - found باربرگ")
+                    return self.driver_details
+            except:
+                pass  # If باربرگ is not found, proceed to check for login errors
+
+            # ❌ If not successful, check for login error
+            if self.check_login_error():
+                print("Login failed: Wrong credentials")
+                self.handle_error_popup()  # Dismiss the error popup
+                return None
+
             return self.driver_details
         except Exception as e:
             print(f"Login failed with error: {str(e)}")
-            return None 
+            return None

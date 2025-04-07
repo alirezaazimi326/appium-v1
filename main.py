@@ -9,13 +9,18 @@ from modules.api.driver_api import DriverAPI
 desired_caps = {
     'platformName': 'Android',
     'automationName': 'UiAutomator2',
-    'deviceName': 'emulator-5554',
+    'avd': 'Pixel_7_Edited_API_34_Num_2',  # <-- AVD name from your emulator config
     'app': os.path.join(os.getcwd(), 'com.transport.apk'),
     'noReset': True,
     'newCommandTimeout': 3600,
     'platformVersion': '14.0',  # Make sure this matches your emulator version
     'autoGrantPermissions': True
 }
+
+def is_app_running(driver, package_name):
+    """Check if the app is already running on the device"""
+    current_package = driver.current_package
+    return current_package == package_name
 
 try:
     # Initialize API and get list of drivers
@@ -29,7 +34,17 @@ try:
     
     # Initialize Appium driver with local server
     driver = webdriver.Remote('http://127.0.0.1:4723', desired_caps)
+
+    # Check if the app is already running (skip opening if it is)
+    if is_app_running(driver, 'com.transport'):
+        print("App is already open, skipping launch.")
+    else:
+        print("Launching app...")
+        driver.launch_app()  # Only launch if app is not running
+        
     wait = WebDriverWait(driver, 20)
+
+
     
     # Handle initial continue button
     before_login = BeforeLoginModule(driver)

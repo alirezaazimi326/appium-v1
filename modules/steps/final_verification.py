@@ -1,6 +1,7 @@
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 class FinalVerificationModule:
     def __init__(self, driver):
@@ -10,29 +11,30 @@ class FinalVerificationModule:
     def verify_success(self):
         """Verify if the final success message is shown"""
         try:
-            # First attempt with UiAutomator
+            # Wait for the success element using UiAutomator
             try:
-                success_element = self.driver.find_element(
+                success_element = self.wait.until(EC.presence_of_element_located((
                     AppiumBy.ANDROID_UIAUTOMATOR,
                     'new UiSelector().text("رسید سند حمل بار")'
-                )
+                )))
                 if success_element.is_displayed():
                     print("Final verification successful - Found success message using UiAutomator")
                     return True
             except Exception:
                 print("Could not verify success with UiAutomator, trying XPath...")
-                
-                # Second attempt with XPath
-                success_element = self.wait.until(EC.presence_of_element_located(
-                    (AppiumBy.XPATH, '//android.widget.TextView[@text="رسید سند حمل بار"]')
-                ))
+
+                # Fallback to XPath if UiAutomator fails
+                success_element = self.wait.until(EC.presence_of_element_located((
+                    AppiumBy.XPATH,
+                    '//android.widget.TextView[@text="رسید سند حمل بار"]'
+                )))
                 if success_element.is_displayed():
                     print("Final verification successful - Found success message using XPath")
                     return True
-            
+
             print("Could not find success message")
             return False
-            
+
         except Exception as e:
             print(f"Final verification failed: {str(e)}")
             return False

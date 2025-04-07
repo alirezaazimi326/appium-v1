@@ -41,14 +41,14 @@ class LogoutModule:
                 # Try first locator
                 settings_button = self.driver.find_element(
                     AppiumBy.ANDROID_UIAUTOMATOR,
-                    'new UiSelector().description("تنظیمات, ")'
+                    'new UiSelector().text("تنظیمات")'
                 )
             except Exception:
                 try:
                     # Try second locator
                     settings_button = self.wait.until(EC.presence_of_element_located((
                         AppiumBy.XPATH,
-                        '//android.view.ViewGroup[@content-desc="تنظیمات, "]'
+                        '//android.widget.TextView[@text="تنظیمات"]'
                     )))
                 except Exception:
                     # Try third locator

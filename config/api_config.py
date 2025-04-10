@@ -1,12 +1,16 @@
-FRAPPE_API_BASE_URL = "http://45.139.10.113:8001"
+FRAPPE_API_BASE_URL = "http://45.139.10.113:8002"
+
+# Endpoints
 FRAPPE_API_DRIVERS_ENDPOINT = "/api/resource/Drivers"
+FRAPPE_API_LOG_DRIVERS_ENDPOINT = "/api/resource/Drivers Log"
 
-# API Authentication
-FRAPPE_API_KEY = "228d75d97efc066"
-FRAPPE_API_SECRET = "12126d1db2edf8c"
+# Authentication
+FRAPPE_API_KEY = "526c1187d506852"
+FRAPPE_API_SECRET = "941ef853fbc951c"
 
-# Construct full URLs
+# Constructed full URLs
 DRIVERS_LIST_URL = f"{FRAPPE_API_BASE_URL}{FRAPPE_API_DRIVERS_ENDPOINT}"
+DRIVERS_LOG_API = f"{FRAPPE_API_BASE_URL}{FRAPPE_API_LOG_DRIVERS_ENDPOINT}"
 
 def get_driver_detail_url(driver_id: str) -> str:
     """Construct URL for specific driver details"""

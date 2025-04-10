@@ -6,7 +6,7 @@ session.headers.update({
     "Authorization": f"token {api_config.FRAPPE_API_KEY}:{api_config.FRAPPE_API_SECRET}"
 })
 
-def create_driver_log(driver_name: str, status: str):
+def create_driver_log(driver_name: str, status: str, log_type: str = "submit"):
     """
     Create a new Drivers Log record in Frappe.
 
@@ -16,7 +16,8 @@ def create_driver_log(driver_name: str, status: str):
     """
     payload = {
         "driver": driver_name,
-        "status": status
+        "status": status,
+        "log_type": log_type
     }
 
     try:

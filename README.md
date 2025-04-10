@@ -1,40 +1,35 @@
-# Transport System Automation
 
-This project is an automation solution for a transport system using Appium and Python.
+# Appium Android Automation with Frappe Integration 🚀
 
-## Prerequisites
+Automation project for Android app using **Python + Appium**, with backend data management via **Frappe**.
 
-- Python 3.8+
-- Appium Server
-- Android SDK
-- Android Emulator or Physical Device
-- pip (Python Package Manager)
+### Features
+- ✅ Android App automation via Appium
+- ✅ Frappe API integration
+- ✅ Drivers management
+- ✅ Drivers Log (record automation statuses)
+- ✅ Update Driver Status
+- ✅ Update or Add License Plates to Driver
+- ✅ Update or Add Truck Drivers to Driver
+- ✅ Modular architecture for easy maintenance
+- ✅ Ready for Dockerization and scaling
 
-## Setup and Installation
+---
 
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+## 📂 Project Structure
 
-2. Appium Server Setup:
-- Install Appium Server
-- Ensure server is running on port 4723
-
-3. Android Setup:
-- Install Android SDK
-- Set up ANDROID_HOME
-- Launch emulator or connect physical device
-
-## Project Structure
-
-```
 appium_automation/
 ├── config/
-│   └── api_config.py
+│   └── api_config.py                        # API URLs and credentials
+│
 ├── modules/
 │   ├── api/
-│   │   └── driver_api.py
+│   │   ├── driver_api.py                    # Fetch drivers and driver details
+│   │   ├── drivers_log_api.py               # Create new Drivers Log records
+│   │   ├── update_driver_status_api.py      # Update status field of a driver
+│   │   ├── update_driver_plate_api.py       # Add/update License plate table
+│   │   └── update_truck_driver_api.py       # Add/update Truck driver table
+│   │
 │   ├── steps/
 │   │   ├── step0_verification.py
 │   │   ├── step1_sender_receiver.py
@@ -46,52 +41,108 @@ appium_automation/
 │   │   ├── step7_payment.py
 │   │   ├── step8_summary.py
 │   │   ├── step9_final_verification.py
-|   |   └── logout.py
+│   │   └── logout.py
+│   │
 │   ├── errors/
-│   │   └── road_bill_active_error.py
-│   ├── before_login.py
-│   ├── login.py
-│   ├── menu.py
-│   └── steps_handler.py
-├── main.py
-├── parallel_runner.py
-├── requirements.txt
-└── README.md
+│   │   └── road_bill_active_error.py        # Custom error handling
+│   │
+│   ├── before_login.py                      # App start & splash screen
+│   ├── login.py                             # Login form automation
+│   ├── menu.py                              # Menu navigation
+│   └── steps_handler.py                     # Runs all step modules in order
+│
+├── test_drivers_log_api.py                  # Test: create Drivers Log
+├── test_update_driver_status_api.py         # Test: update driver status
+├── test_update_driver_plate_api.py          # Test: update or add plate
+├── test_update_truck_driver_api.py          # Test: update or add truck driver
+│
+├── main.py                                  # Single-thread Appium runner
+├── parallel_runner.py                       # Parallel automation (multi-driver)
+├── requirements.txt                         # Python dependencies
+├── .gitignore
+└── README.md                                # Project documentation
 
 
-```
+## ⚙️ Setup
 
-## Running the Automation
-
-To run the automation:
+1. **Clone repository**
 
 ```bash
-python main.py
+git clone https://github.com/alirezaazimi326/appium-v1.git
+cd appium-v1
 ```
 
-## Automation Steps
+2. **Install dependencies**
 
-1. Login Preparations
-2. System Login
-3. Initial Verification
-4. Sender and Receiver Information
-5. Vehicle and Driver Details
-6. Cargo Information
-7. Loading Location
-8. Unloading Location
-9. Postal Code Verification
-10. Payment and Document Issuance
-11. Summary and Final Submission
-12. Final Verification and Return to Home
+```bash
+pip install -r requirements.txt
+```
 
-## Features
+3. **Configure API**
 
-- Complete end-to-end automation of transport document creation
-- API integration for driver information retrieval
-- Modular architecture with centralized step handling
-- Robust error handling and verification at each step
-- Multiple selector strategies (XPath, UiAutomator) for reliable element location
-- Automatic captcha reading and input
-- Confirmation popup handling
-- Final verification and success validation
-- Configuration management for API endpoints 
+Edit `config/api_config.py`  
+Set:
+- `FRAPPE_API_BASE_URL`
+- `FRAPPE_API_KEY`
+- `FRAPPE_API_SECRET`
+
+---
+
+## 🧪 Testing API Modules
+
+### Test Drivers Log API
+
+```bash
+python test_drivers_log_api.py
+```
+
+### Test Update Driver Status
+
+```bash
+python test_update_driver_status_api.py
+```
+
+### Test Update or Add Plate Table
+
+```bash
+python test_update_driver_plate_api.py
+```
+
+### Test Update or Add Truck Driver Table
+
+```bash
+python test_update_truck_driver_api.py
+```
+
+✅ If everything works, you’ll see success logs in the console and records in your Frappe backend.
+
+---
+
+## 🧩 Roadmap
+
+- [x] Add Drivers Log
+- [x] Add Driver Status Update
+- [x] Add Plate Table Handler
+- [x] Add Truck Driver Table Handler
+- [ ] Integrate API calls into main automation flow
+- [ ] Add Dockerization (Android Emulator + Appium + Script)
+- [ ] Add Logging & Reporting
+- [ ] CI/CD for automation pipeline
+
+---
+
+## 👤 Author
+
+- **Alireza Azimi** — [GitHub](https://github.com/alirezaazimi326)
+
+---
+
+## 🤝 Contribution
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+---
+
+## 📜 License
+
+This project is private for now. All rights reserved.

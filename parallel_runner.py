@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     # Start two processes for two emulators
     p1 = Process(target=run_bot, args=("Pixel_7_Edited_API_34_Num_1", 4723, drivers1))
-    p2 = Process(target=run_bot, args=("Pixel_7_Edited_API_34_Num_2", 4725, drivers2))
+    p2 = Process(target=run_bot, args=("Pixel_7_Edited_API_34_Num_2", 4726, drivers2))
 
     p1.start()
     p2.start()
